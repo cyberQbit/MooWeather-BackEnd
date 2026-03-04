@@ -17,8 +17,8 @@ FROM mcr.microsoft.com/dotnet/aspnet:10.0-preview AS final
 WORKDIR /app
 COPY --from=build /app/publish .
 
-# Koyeb varsayılan olarak 8000 portunu dinler, API'mizi 8000'e ayarlıyoruz
-ENV ASPNETCORE_HTTP_PORTS=8000
-EXPOSE 8000
+# Dockerfile içindeki ENV satırını şununla değiştir:
+ENV ASPNETCORE_URLS=http://+:8080
+EXPOSE 8080
 
 ENTRYPOINT ["dotnet", "MooWeather.API.dll"]
