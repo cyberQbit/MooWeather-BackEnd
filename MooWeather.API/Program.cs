@@ -259,4 +259,7 @@ app.MapPost("/api/auth/google", async (GoogleLoginDto loginDto, AppDbContext db,
     }
 });
 
+// UptimeRobot için ping noktası
+app.MapGet("/", () => "MooWeather API Ayakta ve Calisiyor! 🚀");
+
 app.Run();
