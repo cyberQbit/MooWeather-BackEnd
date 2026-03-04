@@ -1,5 +1,3 @@
----
-`TR`
 
 # ⚙️ MooWeather API - Backend Servisi
 
