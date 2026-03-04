@@ -1,0 +1,20 @@
+@HostAddress = http://localhost:5149
+
+### 1. Tüm Şehirleri Getir (GET)
+GET {{HostAddress}}/api/cities
+Accept: application/json
+
+### 2. Yeni Şehir Ekle (POST)
+POST {{HostAddress}}/api/cities
+Content-Type: application/json
+
+{
+  "name": "Ankara",
+  "countryCode": "TR"
+}
+
+### 3. Şehir Sil (DELETE)
+DELETE {{HostAddress}}/api/cities/2
+
+### 4. Hava Durumu Getir (Proxy & Cache)
+GET {{HostAddress}}/api/weather/Istanbul
