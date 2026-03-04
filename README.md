@@ -1,5 +1,3 @@
-### 2. MooWeather Backend (C# .NET) İçin `README.md`
-
 # ⚙️ MooWeather API - Backend Service
 
 ![.NET Core](https://img.shields.io/badge/.NET%20Core-512BD4?style=for-the-badge&logo=dotnet&logoColor=white)
