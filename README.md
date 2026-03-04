@@ -1,3 +1,4 @@
+## 🇹🇷 TÜRKÇE (Turkish)
 
 # ⚙️ MooWeather API - Backend Servisi
 
@@ -27,8 +28,12 @@ Bu, **MooWeather** mobil uygulaması için geliştirilmiş backend (arka uç) se
    ```bash
    dotnet run --urls "[http://0.0.0.0:5149](http://0.0.0.0:5149)"
 
+
+
+
 ---
-`ENG`
+
+## 🇬🇧 ENGLISH
 
 # ⚙️ MooWeather API - Backend Service
 
