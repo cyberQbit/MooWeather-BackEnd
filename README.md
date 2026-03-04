@@ -7,7 +7,7 @@
 This is the backend service for the **MooWeather** mobile application. Built with C# and .NET, it acts as a secure bridge between the mobile app, the user database, and third-party weather providers (OpenWeatherMap).
 
 > 📱 **Note:** This repository contains the backend code. For the Flutter mobile app, visit:
-> 👉 **[MooWeather Mobile Repository](https://github.com/SENIN_KULLANICI_ADIN/MooWeather-Mobile)**
+> 👉 **[MooWeather Mobile Repository](https://github.com/cyberQbit/MooWeather-Mobile)**
 
 ## ⚡ Architecture & Features
 
@@ -20,7 +20,7 @@ This is the backend service for the **MooWeather** mobile application. Built wit
 
 1. Clone the repository:
    ```bash
-   git clone [https://github.com/SENIN_KULLANICI_ADIN/MooWeather-Backend.git](https://github.com/SENIN_KULLANICI_ADIN/MooWeather-Backend.git)
+   git clone [https://github.com/cyberQbit/MooWeather-Backend.git](https://github.com/cyberQbit/MooWeather-Backend.git)
 
 
 2. Set your OpenWeatherMap API Key in `appsettings.json`.
