@@ -24,8 +24,8 @@ builder.Services.AddHttpClient();  // Sunucumuza başka sitelere istek atma yete
 builder.Services.AddSqlite<AppDbContext>("Data Source=mooweather.db");
 
 // --- YENİ EKLENEN KORUMA (AUTH) AYARLARI ---
-var secretKey = builder.Configuration["JwtSettings:SecretKey"];
-var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!));
+var jwtSecret = builder.Configuration["JwtSettings:SecretKey"] ?? "MooWeather_Cok_Gizli_Sifre_123456789";
+var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret));
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -227,8 +227,8 @@ app.MapPost("/api/auth/google", async (GoogleLoginDto loginDto, AppDbContext db,
         }
 
         // 3. ADIM: Kendi VIP Kartımızı (JWT) Üretiyoruz
-        var secretKey = config["JwtSettings:SecretKey"];
-        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey!));
+        var jwtSecret = config["JwtSettings:SecretKey"] ?? "MooWeather_Cok_Gizli_Sifre_123456789";
+        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret));
         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
         // Kartın içine kullanıcının kimliğini (ID ve Email) basıyoruz
