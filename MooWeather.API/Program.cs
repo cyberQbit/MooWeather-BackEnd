@@ -126,13 +126,17 @@ app.MapGet("/api/weather/{cityName}", async (
         return Results.Content(cachedWeather, "application/json");
     }
 
-    // 2. appsettings.json dosyasından API anahtarları listemizi (Array) okuyoruz
-    var apiKeys = config.GetSection("OpenWeather:ApiKeys").Get<string[]>();
+   // 2. Render'dan (Tekli) veya ayarlardan (Çoklu) şifreleri topla
+    var singleKey = config["OpenWeather:ApiKey"];
+    var multiKeys = config.GetSection("OpenWeather:ApiKeys").Get<string[]>();
 
-    // Eğer ayar dosyasında key yoksa veya okunamazsa sunucu hatası dönüyoruz
-    if (apiKeys == null || apiKeys.Length == 0)
+    var apiKeys = new List<string>();
+    if (!string.IsNullOrWhiteSpace(singleKey)) apiKeys.Add(singleKey);
+    if (multiKeys != null) apiKeys.AddRange(multiKeys);
+
+    if (apiKeys.Count == 0)
     {
-        return Results.StatusCode(500); // 500 Internal Server Error
+        return Results.StatusCode(500); 
     }
 
     var client = httpClientFactory.CreateClient();
