@@ -159,3 +159,4 @@ C:\mooweather_Backend\MooWeather.API\bin\Debug\net10.0\Microsoft.IdentityModel.T
 C:\mooweather_Backend\MooWeather.API\bin\Debug\net10.0\System.IdentityModel.Tokens.Jwt.dll
 C:\mooweather_Backend\MooWeather.API\bin\Debug\net10.0\System.Management.dll
 C:\mooweather_Backend\MooWeather.API\bin\Debug\net10.0\runtimes\win\lib\net7.0\System.Management.dll
+C:\mooweather_Backend\MooWeather.API\obj\Debug\net10.0\MooWeather.API.sourcelink.json

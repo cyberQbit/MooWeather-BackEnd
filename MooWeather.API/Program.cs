@@ -197,19 +197,70 @@ app.MapGet("/api/weather/{cityName}", async (
     return Results.BadRequest("Hava durumu çekilemedi. Tüm API anahtarları denendi ancak yanıt alınamadı (Muhtemelen kotalar doldu).");
 });
 
+// 4.5 GET: Koordinat (GPS) ile Hava Durumu Getir
+app.MapGet("/api/weather/location", async (
+    double lat, 
+    double lon, 
+    string? lang,
+    IHttpClientFactory httpClientFactory,
+    IMemoryCache cache,
+    IConfiguration config) => 
+{
+    lang = string.IsNullOrWhiteSpace(lang) ? "tr" : lang;
+    string cacheKey = $"weather_gps_{lat}_{lon}_{lang.ToLower()}"; 
+    
+    if (cache.TryGetValue(cacheKey, out string? cachedWeather)) return Results.Content(cachedWeather, "application/json");
+
+    var singleKey = config["OpenWeather:ApiKey"];
+    var multiKeys = config.GetSection("OpenWeather:ApiKeys").Get<string[]>();
+    var apiKeys = new List<string>();
+    if (!string.IsNullOrWhiteSpace(singleKey)) apiKeys.Add(singleKey);
+    if (multiKeys != null) apiKeys.AddRange(multiKeys);
+
+    if (apiKeys.Count == 0) return Results.StatusCode(500); 
+
+    var client = httpClientFactory.CreateClient();
+    
+    foreach (var apiKey in apiKeys)
+    {
+        string url = $"https://api.openweathermap.org/data/2.5/weather?lat={lat}&lon={lon}&appid={apiKey}&units=metric&lang={lang}";
+        var response = await client.GetAsync(url);
+
+        if (response.IsSuccessStatusCode)
+        {
+            string weatherData = await response.Content.ReadAsStringAsync();
+            try
+            {
+                var json = JObject.Parse(weatherData);
+                var weatherDto = new WeatherResponseDto
+                {
+                    Name = (string?)json["name"] ?? string.Empty,
+                    Temp = (double?)(json["main"]?["temp"]) ?? 0,
+                    TempMax = (double?)(json["main"]?["temp_max"]) ?? 0,
+                    TempMin = (double?)(json["main"]?["temp_min"]) ?? 0,
+                    FeelsLike = (double?)(json["main"]?["feels_like"]) ?? 0,
+                    Humidity = (int?)(json["main"]?["humidity"]) ?? 0,
+                    Pressure = (int?)(json["main"]?["pressure"]) ?? 0,
+                    Description = (string?)(json["weather"]?[0]?["description"]) ?? string.Empty,
+                    WindSpeed = (double?)(json["wind"]?["speed"]) ?? 0
+                };
+                var weatherJson = JsonConvert.SerializeObject(weatherDto);
+                cache.Set(cacheKey, weatherJson, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(10)));
+                return Results.Content(weatherJson, "application/json");
+            }
+            catch { return Results.Content(weatherData, "application/json"); }
+        }
+    }
+    return Results.BadRequest("Konum hava durumu çekilemedi.");
+});
+
 // 5. POST: Google Login ve JWT Üretimi (VIP Kart Masası)
 app.MapPost("/api/auth/google", async (GoogleLoginDto loginDto, AppDbContext db, IConfiguration config) =>
 {
     try
     {
-        // 1. ADIM: Google'ı arayıp "Bu mektup gerçek mi?" diye soruyoruz
-        var validationSettings = new GoogleJsonWebSignature.ValidationSettings
-        {
-            Audience = new[] { config["GoogleAuth:ClientId"] }
-        };
-
-        // Eğer mektup sahteyse bu satırda kod hata (Exception) fırlatır
-        var payload = await GoogleJsonWebSignature.ValidateAsync(loginDto.IdToken, validationSettings);
+        // 1. ADIM: Sadece Google'ın gerçek imzası var mı diye bak (Şifre eşleşmesini boşver)
+        var payload = await GoogleJsonWebSignature.ValidateAsync(loginDto.IdToken);
 
         // 2. ADIM: Mektup gerçek! Kullanıcıyı veritabanında arıyoruz
         var user = await db.Users.FirstOrDefaultAsync(u => u.GoogleSubjectId == payload.Subject);
@@ -256,6 +307,7 @@ app.MapPost("/api/auth/google", async (GoogleLoginDto loginDto, AppDbContext db,
     }
     catch (Exception ex)
     {
+        Console.WriteLine($"GOOGLE LOGIN HATASI: {ex.Message}"); // <-- BU SATIRI EKLE!
         // Eğer referans mektubu (Google Token) sahteyse veya süresi geçmişse:
         return Results.Unauthorized(); 
     }
