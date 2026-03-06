@@ -45,6 +45,13 @@ builder.Services.AddAuthorization(); // Yetkilendirme servisini açıyoruz
 
 var app = builder.Build();
 
+// VERİTABANI TABLOLARINI OTOMATİK OLUŞTUR
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    dbContext.Database.EnsureCreated(); 
+}
+
 // --- YENİ EKLENEN KORUMALAR ---
 app.UseAuthentication(); // "Kimliğini (Token) göster bakayım"
 app.UseAuthorization();  // "Geçebilirsin / Geçemezsin"
