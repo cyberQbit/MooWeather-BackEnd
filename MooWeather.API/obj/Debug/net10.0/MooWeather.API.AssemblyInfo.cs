@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("MooWeather.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+a68535d2b0609a159b83147983d891907760c481")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+170a55ee2e4fc4f52035ae2e511459ad163111da")]
 [assembly: System.Reflection.AssemblyProductAttribute("MooWeather.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("MooWeather.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
