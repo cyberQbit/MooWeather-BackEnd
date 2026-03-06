@@ -173,7 +173,13 @@ app.MapGet("/api/weather/{cityName}", async (
                     Humidity = (int?)(json["main"]?["humidity"]) ?? 0,
                     Pressure = (int?)(json["main"]?["pressure"]) ?? 0,
                     Description = (string?)(json["weather"]?[0]?["description"]) ?? string.Empty,
-                    WindSpeed = (double?)(json["wind"]?["speed"]) ?? 0
+                    WindSpeed = (double?)(json["wind"]?["speed"]) ?? 0,
+                    
+                    // YENİ EKLENEN VERİLERİ KUTUYA YERLEŞTİRİYORUZ!
+                    Visibility = (int?)json["visibility"] ?? 0,
+                    Clouds = (int?)(json["clouds"]?["all"]) ?? 0,
+                    Sunrise = (long?)(json["sys"]?["sunrise"]) ?? 0,
+                    Sunset = (long?)(json["sys"]?["sunset"]) ?? 0
                 };
 
                 var weatherJson = JsonConvert.SerializeObject(weatherDto);
@@ -249,7 +255,13 @@ app.MapGet("/api/weather/location", async (
                     Humidity = (int?)(json["main"]?["humidity"]) ?? 0,
                     Pressure = (int?)(json["main"]?["pressure"]) ?? 0,
                     Description = (string?)(json["weather"]?[0]?["description"]) ?? string.Empty,
-                    WindSpeed = (double?)(json["wind"]?["speed"]) ?? 0
+                    WindSpeed = (double?)(json["wind"]?["speed"]) ?? 0,
+                    
+                    // YENİ EKLENEN VERİLERİ KUTUYA YERLEŞTİRİYORUZ!
+                    Visibility = (int?)json["visibility"] ?? 0,
+                    Clouds = (int?)(json["clouds"]?["all"]) ?? 0,
+                    Sunrise = (long?)(json["sys"]?["sunrise"]) ?? 0,
+                    Sunset = (long?)(json["sys"]?["sunset"]) ?? 0
                 };
                 var weatherJson = JsonConvert.SerializeObject(weatherDto);
                 cache.Set(cacheKey, weatherJson, new MemoryCacheEntryOptions().SetAbsoluteExpiration(TimeSpan.FromMinutes(10)));
