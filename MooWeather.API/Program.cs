@@ -305,11 +305,14 @@ app.MapPost("/api/auth/google", async (GoogleLoginDto loginDto, AppDbContext db,
         // Müşteriye VIP kartını (Token) teslim ediyoruz!
         return Results.Ok(new { Token = jwtString, Message = "Giriş Başarılı!" });
     }
-    catch (Exception ex)
+   catch (Exception ex)
     {
-        Console.WriteLine($"GOOGLE LOGIN HATASI: {ex.Message}"); // <-- BU SATIRI EKLE!
-        // Eğer referans mektubu (Google Token) sahteyse veya süresi geçmişse:
-        return Results.Unauthorized(); 
+        // 401 yerine 400 (BadRequest) dönüyoruz ve hatayı direkt telefona fırlatıyoruz!
+        return Results.BadRequest(new { 
+            Hata = "GOOGLE_BILETI_GECERSIZ", 
+            Detay = ex.Message,
+            TokenUzunlugu = loginDto?.IdToken?.Length ?? 0
+        }); 
     }
 });
 
